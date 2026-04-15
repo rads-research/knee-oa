@@ -1,0 +1,84 @@
+# Experiment configuration
+# All hyperparameters match the manuscript Methods section
+
+# Random seeds for reproducibility
+seeds: [42, 123, 456, 789, 1024]
+
+# Model
+model:
+  architecture: efficientnet_v2_s
+  pretrained: imagenet
+  dropout: 0.2
+  num_classes: 1  # binary classification via BCEWithLogitsLoss
+
+# Preprocessing (applied to all images before any perturbation)
+preprocessing:
+  image_size: 224
+  clahe_clip_limit: 2.0
+  clahe_tile_grid: [8, 8]
+  normalize_range: [-1, 1]
+  channels: 3  # grayscale replicated to 3 channels
+
+# Training
+training:
+  optimizer: adamw
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-2
+  scheduler: cosine_annealing_warm_restarts
+  scheduler_T0: 10
+  scheduler_Tmult: 2
+  batch_size: 32
+  max_epochs: 100
+  patience: 15  # early stopping on validation balanced accuracy
+  loss: bce_with_logits
+  class_weighting: inverse_frequency
+
+# Artifact patterns
+patterns:
+  - name: horizontal_lines
+    description: "Anti-scatter grid artifact simulation"
+    base_thickness: 10
+    base_intensity: 0.5
+    interval: 30
+    start_row: 20
+
+  - name: checkerboard
+    description: "Digital processing artifact simulation"
+    block_size: 16
+    base_intensity: 0.3
+    # Even blocks: +intensity, Odd blocks: -intensity*0.5
+
+  - name: black_bar
+    description: "PHI redaction / burned-in annotation simulation"
+    base_top_bottom: 25
+    base_side: 15
+    bar_value: -1.0
+    max_tb: 100
+    max_side: 80
+
+  - name: grid_overlay
+    description: "Measurement/calibration overlay simulation"
+    base_thickness: 2
+    base_intensity: 0.6
+    interval: 20
+
+# Severity levels (alpha multiplier)
+severity_levels: [0.5, 1.0, 1.5]
+
+# Augmentation-trained models (E1)
+augmentation:
+  probability: 0.4
+  severity_range: [0.5, 1.5]
+  # Applied ONLY to training images; validation images are NOT augmented
+
+# Evaluation
+evaluation:
+  threshold: 0.5
+  metrics:
+    - balanced_accuracy
+    - auroc
+    - f1
+    - sensitivity
+    - specificity
+    - ppv
+    - npv
