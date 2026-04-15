@@ -1,6 +1,6 @@
 # Artifact-Triggered Vulnerability and Augmentation-Based Mitigation in a Deep Learning Classifier for Knee Osteoarthritis
 
-Code repository for the manuscript: *"Artifact-Triggered Vulnerability and Augmentation-Based Mitigation in a Deep Learning Classifier for Knee Osteoarthritis"* (submitted to Image and Vision Computing).
+Code repository for the manuscript: *"Artifact-Triggered Vulnerability and Augmentation-Based Mitigation in a Deep Learning Classifier for Knee Osteoarthritis"*.
 
 ## Overview
 
